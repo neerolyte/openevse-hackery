@@ -1,7 +1,3 @@
-before publishing:
-
- * get rid of all intermediate commits
-
 longer term:
  * manage enabled/disabled state
  * shift battery is full soc threshold to config
