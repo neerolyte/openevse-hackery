@@ -46,6 +46,16 @@ export class OpenevseClient {
     }
   }
 
+  async getMeasuredAmps(): Promise<number> {
+    let response = await this.#rapiRequest(`$GG`);
+    let match = response.match(/^\$OK ([0-9]+) /);
+    if (!match) {
+      throw new Error(`Unexpected response: ${response}`);
+    }
+
+    return parseInt(match[1]) / 1000;
+  }
+
   constrainAmps(amps: number): number {
     return Math.round(Math.max(Math.min(amps, this.#ampsMax), this.#ampsMin));
   }

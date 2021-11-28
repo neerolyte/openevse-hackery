@@ -65,7 +65,18 @@ describe('OpenevseClient', () => {
     await expect(client.setTargetAmps(7)).to.be.rejectedWith('Unexpected response: $NK 24^07');
     expect(axiosMock.history.get.length).to.equal(1);
     expect(axiosMock.history.get[0].url).to.equal('http://example.com/r?json=1&rapi=$SC 7');
-  })
+  });
+
+  [
+    { rapiResponse: '$OK 4840 120000^2B', expected: 4.84},
+    { rapiResponse: '$OK 4620 120000^23', expected: 4.62},
+    { rapiResponse: '$OK 0 120000^13', expected: 0 },
+  ].forEach(async (data: { rapiResponse: string, expected: number}) => {
+    it(`getMeasuredAmps(): ${data.rapiResponse} => ${data.expected}`, async () => {
+      mockRapiResponse('$GG', { ret: data.rapiResponse });
+      expect(await client.getMeasuredAmps()).to.equal(data.expected);
+    })
+  });
 
   it.skip('should throw on bad rapi responses');
 });

@@ -16,9 +16,11 @@ const openevseClient = new OpenevseClient(config.openevse);
   }
 
   let openevseTargetAmps = await openevseClient.getTargetAmps();
-  let newTargetAmps = openevseClient.constrainAmps(spareAmps + openevseTargetAmps);
+  let openevseMeasuredAmps = await openevseClient.getMeasuredAmps();
+  let newTargetAmps = openevseClient.constrainAmps(spareAmps + openevseMeasuredAmps);
 
   console.log(`Spare amps: ${spareAmps}`);
+  console.log(`Measured amps: ${openevseMeasuredAmps}`)
   console.log(`Target amps: ${openevseTargetAmps} => ${newTargetAmps}`);
   openevseClient.setTargetAmps(newTargetAmps);
 })();
