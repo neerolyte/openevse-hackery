@@ -5,7 +5,8 @@ import { config } from './src/config';
 const selectliveClient = new SelectliveClient(config.selectlive);
 const openevseClient = new OpenevseClient(config.openevse);
 
-async function update()  {
+async function update() {
+  console.log((new Date()).toISOString());
   let houseBatterySoc = await selectliveClient.getBatterySoc();
   let houseBatteryW = await selectliveClient.getBatteryW();
   let spareAmps = 0 - ( houseBatteryW / 240 );

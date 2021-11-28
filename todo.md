@@ -1,5 +1,6 @@
 longer term:
  * manage enabled/disabled state
+ * use a proper logging library
  * shift battery is full soc threshold to config
  * shift additional spare amps when battery is full to config
  * verify checksums
