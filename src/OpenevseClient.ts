@@ -2,8 +2,8 @@ const axios = require('axios').default;
 
 export class OpenevseClient {
   #url: string;
-  #ampsMax: number;
-  #ampsMin: number;
+  readonly ampsMax: number;
+  readonly ampsMin: number;
 
   constructor(options: {
     url: string,
@@ -11,8 +11,8 @@ export class OpenevseClient {
     ampsMax: number,
   }) {
     this.#url = options.url;
-    this.#ampsMin = options.ampsMin;
-    this.#ampsMax = options.ampsMax;
+    this.ampsMin = options.ampsMin;
+    this.ampsMax = options.ampsMax;
   }
 
   async #rapiRequest(command: string): Promise<string> {
@@ -57,6 +57,6 @@ export class OpenevseClient {
   }
 
   constrainAmps(amps: number): number {
-    return Math.round(Math.max(Math.min(amps, this.#ampsMax), this.#ampsMin));
+    return Math.round(Math.max(Math.min(amps, this.ampsMax), this.ampsMin));
   }
 }
