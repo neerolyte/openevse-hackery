@@ -5,13 +5,13 @@ import { config } from './src/config';
 const selectliveClient = new SelectliveClient(config.selectlive);
 const openevseClient = new OpenevseClient(config.openevse);
 
-(async () => {
+async function update()  {
   let houseBatterySoc = await selectliveClient.getBatterySoc();
   let houseBatteryW = await selectliveClient.getBatteryW();
   let spareAmps = 0 - ( houseBatteryW / 240 );
 
   if (houseBatterySoc > 99.0) {
-    console.log("Adding spare amps as house battery is full\n");
+    console.log("Adding spare amps as house battery is full");
     spareAmps += 5;
   }
 
@@ -23,4 +23,14 @@ const openevseClient = new OpenevseClient(config.openevse);
   console.log(`Measured amps: ${openevseMeasuredAmps}`)
   console.log(`Target amps: ${openevseTargetAmps} => ${newTargetAmps}`);
   openevseClient.setTargetAmps(newTargetAmps);
-})();
+};
+
+async function updateLoop() {
+  try {
+    await update();
+  } catch (e) {
+    console.log(e);
+  }
+  setTimeout(updateLoop, 10000);
+}
+updateLoop();
