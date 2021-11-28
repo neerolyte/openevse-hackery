@@ -20,6 +20,11 @@ async function update() {
   let openevseMeasuredAmps = await openevseClient.getMeasuredAmps();
   let newTargetAmps = openevseClient.constrainAmps(spareAmps + openevseMeasuredAmps);
 
+  // If the measured amps are low, always constrain to the minimum target to avoid harsh start ups
+  if (openevseMeasuredAmps < config.openevse.ampsMin) {
+    newTargetAmps = config.openevse.ampsMin;
+  }
+
   console.log(`Spare amps: ${spareAmps}`);
   console.log(`Measured amps: ${openevseMeasuredAmps}`)
   console.log(`Target amps: ${openevseTargetAmps} => ${newTargetAmps}`);
