@@ -31,8 +31,8 @@ export class Updater {
     let measuredAmps = await this.#openevseClient.getMeasuredAmps();
     let newTargetAmps = this.#openevseClient.constrainAmps(spareAmps + measuredAmps);
 
-    // If the measured amps are low, always constrain to the minimum target to avoid harsh start ups
-    if (measuredAmps < this.#openevseClient.ampsMin) {
+    // If the measured amps are much lower than minimum, constrain to the minimum target to avoid harsh start ups
+    if (measuredAmps < this.#openevseClient.ampsMin / 2) {
       newTargetAmps = this.#openevseClient.ampsMin;
     }
 
