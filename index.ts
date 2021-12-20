@@ -1,5 +1,3 @@
-import { OpenevseClient } from './src/OpenevseClient';
-import { SelectliveClient } from './src/SelectliveClient';
 import { Updater } from './src/Updater';
 import { injector } from './src/injector';
 
