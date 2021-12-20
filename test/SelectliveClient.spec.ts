@@ -6,10 +6,7 @@ describe('SelectliveClient', () => {
   const url = 'http://example.com/';
   const device = 'x-device';
   const pointUrl = 'http://example.com/cgi-bin/solarmonweb/devices/x-device/point';
-  const client = new SelectliveClient({
-    url: url,
-    device: device,
-  });
+  const client = new SelectliveClient(url, device);
 
   function mockPointItems(items: object) {
     axiosMock.onGet(pointUrl).replyOnce(200, { items: items });

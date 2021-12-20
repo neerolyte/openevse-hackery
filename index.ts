@@ -1,11 +1,9 @@
 import { OpenevseClient } from './src/OpenevseClient';
 import { SelectliveClient } from './src/SelectliveClient';
-import { config } from './src/config';
 import { Updater } from './src/Updater';
+import { injector } from './src/injector';
 
-const selectliveClient = new SelectliveClient(config.selectlive);
-const openevseClient = new OpenevseClient(config.openevse);
-const updater = new Updater(selectliveClient, openevseClient);
+const updater = injector.injectClass(Updater);
 
 async function update() {
   console.log((new Date()).toISOString());

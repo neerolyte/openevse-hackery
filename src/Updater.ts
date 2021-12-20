@@ -2,16 +2,12 @@ import { OpenevseClient } from "./OpenevseClient";
 import { SelectliveClient } from "./SelectliveClient";
 
 export class Updater {
-  #selectliveClient: SelectliveClient;
-  #openevseClient: OpenevseClient;
 
   constructor(
-    selectliveClient: SelectliveClient,
-    openevseClient: OpenevseClient
-  ) {
-    this.#selectliveClient = selectliveClient;
-    this.#openevseClient = openevseClient;
-  }
+    private selectliveClient: SelectliveClient,
+    private openevseClient: OpenevseClient
+  ) {}
+  public static inject = ['selectliveClient', 'openevseClient'] as const;
 
   public async update(): Promise<{
     spareAmps: number,
@@ -19,29 +15,29 @@ export class Updater {
     oldTargetAmps: number,
     newTargetAmps: number,
   }> {
-    let houseBatterySoc = await this.#selectliveClient.getBatterySoc();
-    let houseBatteryW = await this.#selectliveClient.getBatteryW();
+    let houseBatterySoc = await this.selectliveClient.getBatterySoc();
+    let houseBatteryW = await this.selectliveClient.getBatteryW();
     let spareAmps = 0 - ( houseBatteryW / 240 );
 
     if (houseBatterySoc > 99.0) {
       spareAmps += 5;
     }
 
-    let oldTargetAmps = await this.#openevseClient.getTargetAmps();
-    let measuredAmps = await this.#openevseClient.getMeasuredAmps();
-    let newTargetAmps = this.#openevseClient.constrainAmps(spareAmps + measuredAmps);
+    let currentTargetAmps = await this.openevseClient.getTargetAmps();
+    let measuredAmps = await this.openevseClient.getMeasuredAmps();
+    let newTargetAmps = this.openevseClient.constrainAmps(spareAmps + measuredAmps);
 
-    // If the measured amps are much lower than minimum, constrain to the minimum target to avoid harsh start ups
-    if (measuredAmps < this.#openevseClient.ampsMin / 2) {
-      newTargetAmps = this.#openevseClient.ampsMin;
+    // If the measured amps are low, constrain to the minimum target to avoid harsh start ups
+    if (measuredAmps < currentTargetAmps - 5) {
+      newTargetAmps = measuredAmps + 5;
     }
 
-    this.#openevseClient.setTargetAmps(newTargetAmps);
+    this.openevseClient.setTargetAmps(newTargetAmps);
 
     return {
       spareAmps: spareAmps,
       measuredAmps: measuredAmps,
-      oldTargetAmps: oldTargetAmps,
+      oldTargetAmps: currentTargetAmps,
       newTargetAmps: newTargetAmps,
     };
   }

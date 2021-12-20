@@ -1,19 +1,14 @@
 const axios = require('axios').default;
 
 export class SelectliveClient {
-  #url: string;
-  #device: string;
-
-  constructor(options: {
-    url: string,
-    device: string,
-  }) {
-    this.#url = options.url;
-    this.#device = options.device;
-  }
+  constructor(
+    private selectliveUrl: string,
+    private selectliveDevice: string
+  ) {}
+  public static inject = ['selectliveUrl', 'selectliveDevice'] as const;
 
   #getDeviceUrl(): string {
-    return `${this.#url}cgi-bin/solarmonweb/devices/${this.#device}/`;
+    return `${this.selectliveUrl}cgi-bin/solarmonweb/devices/${this.selectliveDevice}/`;
   }
 
   async #getPoint() {

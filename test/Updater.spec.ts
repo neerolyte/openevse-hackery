@@ -2,6 +2,7 @@ import { expect } from 'chai';
 import * as sinon from 'ts-sinon';
 import { StubbedInstance } from 'ts-sinon';
 import { OpenevseClient } from '../src/OpenevseClient';
+import { OpenevseRawClient } from '../src/OpenevseRawClient';
 import { SelectliveClient } from '../src/SelectliveClient';
 import { Updater } from '../src/Updater';
 
@@ -10,15 +11,8 @@ describe('Updater', () => {
   let openevseClient: StubbedInstance<OpenevseClient>;
   let updater: Updater;
   beforeEach(() => {
-    selectliveClient = sinon.stubConstructor(SelectliveClient, {
-      url: 'x-url',
-      device: 'x-device',
-    });
-    openevseClient = sinon.stubConstructor(OpenevseClient, {
-      url: 'x-url',
-      ampsMax: 20,
-      ampsMin: 6,
-    });
+    selectliveClient = sinon.stubConstructor(SelectliveClient);
+    openevseClient = sinon.stubConstructor(OpenevseClient);
     updater = new Updater(selectliveClient, openevseClient);
   });
 
@@ -51,4 +45,8 @@ describe('Updater', () => {
     expect(calls[0].args.length).to.equal(1);
     expect(calls[0].args[0]).to.equal(3);
   });
+
+  it.skip('at low SoC, load and supply should match', () => {
+
+  })
 });
