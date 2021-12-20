@@ -63,10 +63,6 @@ describe('OpenevseRawClient', () => {
     expect(axiosMock.history.get[0].url).to.equal('http://example.com/r?json=1&rapi=$SC 7');
   });
 
-  it.skip('adjust target amps based on measured when using setSpareAmps', () => {
-
-  });
-
   [
     { rapiResponse: '$OK 4840 120000^2B', expected: 4.84},
     { rapiResponse: '$OK 4620 120000^23', expected: 4.62},

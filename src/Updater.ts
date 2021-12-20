@@ -16,8 +16,7 @@ export class Updater {
     newTargetAmps: number,
   }> {
     let houseBatterySoc = await this.selectliveClient.getBatterySoc();
-    let houseBatteryW = await this.selectliveClient.getBatteryW();
-    let spareAmps = 0 - ( houseBatteryW / 240 );
+    let spareAmps = await this.selectliveClient.getSpareAmps();
 
     if (houseBatterySoc > 99.0) {
       spareAmps += 5;
@@ -25,14 +24,14 @@ export class Updater {
 
     let currentTargetAmps = await this.openevseClient.getTargetAmps();
     let measuredAmps = await this.openevseClient.getMeasuredAmps();
-    let newTargetAmps = this.openevseClient.constrainAmps(spareAmps + measuredAmps);
+    let newTargetAmps = spareAmps + measuredAmps;
 
     // If the measured amps are low, constrain to the minimum target to avoid harsh start ups
     if (measuredAmps < currentTargetAmps - 5) {
       newTargetAmps = measuredAmps + 5;
     }
 
-    this.openevseClient.setTargetAmps(newTargetAmps);
+    newTargetAmps = await this.openevseClient.setTargetAmps(newTargetAmps);
 
     return {
       spareAmps: spareAmps,

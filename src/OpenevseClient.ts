@@ -17,15 +17,17 @@ export class OpenevseClient {
     return this.openevseRawClient.getTargetAmps();
   }
 
-  async setTargetAmps(amps: number): Promise<void> {
-    return this.openevseRawClient.setTargetAmps(this.constrainAmps(amps));
+  async setTargetAmps(amps: number): Promise<number> {
+    amps = this.constrainAmps(amps);
+    this.openevseRawClient.setTargetAmps(amps);
+    return amps;
   }
 
   async getMeasuredAmps(): Promise<number> {
     return this.openevseRawClient.getMeasuredAmps();
   }
 
-  constrainAmps(amps: number): number {
+  private constrainAmps(amps: number): number {
     return Math.round(Math.max(Math.min(amps, this.openevseAmpsMax), this.openevseAmpsMin));
   }
 }

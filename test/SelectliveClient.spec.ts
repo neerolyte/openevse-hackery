@@ -1,3 +1,4 @@
+import { fail } from 'assert';
 import { expect } from 'chai';
 import { SelectliveClient } from '../src/SelectliveClient';
 var axiosMock = require('./axiosMock').mock;
@@ -19,14 +20,18 @@ describe('SelectliveClient', () => {
     expect(await client.getBatterySoc()).to.equal(3);
     mockPointItems({ 'battery_soc': 50 });
     expect(await client.getBatterySoc()).to.equal(50);
-  })
+  });
 
-  it(`getBatteryW()`, async () => {
-    mockPointItems({ 'battery_w': 322.998046875 });
-    expect(await client.getBatteryW()).to.equal(322.998046875);
-    mockPointItems({ 'battery_w': -1024.1234 });
-    expect(await client.getBatteryW()).to.equal(-1024.1234);
-    mockPointItems({ 'battery_w': 0 });
-    expect(await client.getBatteryW()).to.equal(0);
-  })
+  ([
+    [-240, 1],
+    [0, 0],
+    [240, -1],
+    [360, -1.5],
+  ] as [watts: number, amps: number][]).forEach(async (data) => {
+    let [watts, amps] = data;
+    it(`knows spare amps: ${watts} => ${amps}`, async () => {
+      mockPointItems({ 'battery_w': watts });
+      expect(await client.getSpareAmps()).to.equal(amps)
+    });
+  });
 });

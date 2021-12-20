@@ -30,11 +30,12 @@ describe('OpenevseClient', () => {
   ] as [ amps: number, expected: number][]).forEach(async (data) => {
     let [amps, expected] = data;
     it(`constrains amps(): ${amps} => ${expected}`, async () => {
-      await client.setTargetAmps(amps);
+      let returnedAmps = await client.setTargetAmps(amps);
       let calls = openevseRawClient.setTargetAmps.getCalls();
       expect(calls[0].args[0]).to.equal(expected);
       expect(calls.length).to.equal(1);
       expect(calls[0].args.length).to.equal(1);
+      expect(returnedAmps).to.equal(expected)
     })
   });
 });

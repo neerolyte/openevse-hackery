@@ -21,7 +21,11 @@ export class SelectliveClient {
     return (point).items.battery_soc;
   }
 
-  async getBatteryW(): Promise<number> {
+  private async getBatteryW(): Promise<number> {
     return (await this.#getPoint()).items.battery_w;
+  }
+
+  async getSpareAmps(): Promise<number> {
+    return - (await this.getBatteryW()) / 240;
   }
 }
