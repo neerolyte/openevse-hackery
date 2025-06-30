@@ -74,5 +74,15 @@ describe('OpenevseRawClient', () => {
     })
   });
 
+  it(`setToSleep()`, async () => {
+    mockRapiResponse('$FS', { ret: '$OK^20' });
+    expect(await client.setToSleep()).to.equal(undefined);
+  });
+
+  it(`setToEnabled()`, async () => {
+    mockRapiResponse('$FE', { ret: '$OK^20' });
+    expect(await client.setToEnabled()).to.equal(undefined);
+  });
+
   it.skip('should throw on bad rapi responses');
 });

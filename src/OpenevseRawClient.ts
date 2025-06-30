@@ -45,4 +45,20 @@ export class OpenevseRawClient {
 
     return parseInt(match[1]) / 1000;
   }
+
+  async setToSleep(): Promise<void> {
+    let response = await this.#rapiRequest('$FS');
+    let match = response.match(/^\$OK\b/);
+    if (!match) {
+      throw new Error(`Unexpected response: ${response}`);
+    }
+  }
+
+  async setToEnabled(): Promise<void> {
+    let response = await this.#rapiRequest('$FE');
+    let match = response.match(/^\$OK\b/);
+    if (!match) {
+      throw new Error(`Unexpected response: ${response}`);
+    }
+  }
 }

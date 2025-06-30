@@ -9,6 +9,11 @@ I wanted to learn some Typescript, so I've done that here.
 # Quick start
 
 ```bash
-$ nvm install
 $ npm install
+```
+
+# Testing
+
+```bash
+$ npm run test
 ```
