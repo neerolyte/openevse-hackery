@@ -15,12 +15,7 @@ export class Updater {
     oldTargetAmps: number,
     newTargetAmps: number,
   }> {
-    let houseBatterySoc = await this.selectliveClient.getBatterySoc();
     let spareAmps = await this.selectliveClient.getSpareAmps();
-
-    if (houseBatterySoc > 99.0) {
-      spareAmps += 5;
-    }
 
     let currentTargetAmps = await this.openevseClient.getTargetAmps();
     let measuredAmps = await this.openevseClient.getMeasuredAmps();
