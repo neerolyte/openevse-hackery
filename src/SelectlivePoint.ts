@@ -13,7 +13,11 @@ export class SelectlivePoint {
   }
 
   public getSpareAmps(): number {
-    return - this.getBatteryW() / 240;
+    let spare = 0 - (this.getBatteryW() / 240);
+    if (this.isCurtailed()) {
+      spare += 10;
+    }
+    return spare - (100 - this.getBatterySoc());
   }
 
   public getShuntW(): number {

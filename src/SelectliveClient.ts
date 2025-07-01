@@ -1,3 +1,5 @@
+import { SelectlivePoint } from "./SelectlivePoint";
+
 const axios = require('axios').default;
 
 export class SelectliveClient {
@@ -11,21 +13,8 @@ export class SelectliveClient {
     return `${this.selectliveUrl}cgi-bin/solarmonweb/devices/${this.selectliveDevice}/`;
   }
 
-  async #getPoint() {
+  public async getPoint(): Promise<SelectlivePoint> {
     let url = `${this.#getDeviceUrl()}point`;
-    return (await axios.get(url)).data;
-  }
-
-  async getBatterySoc(): Promise<number> {
-    let point = await this.#getPoint();
-    return (point).items.battery_soc;
-  }
-
-  private async getBatteryW(): Promise<number> {
-    return (await this.#getPoint()).items.battery_w;
-  }
-
-  async getSpareAmps(): Promise<number> {
-    return - (await this.getBatteryW()) / 240;
+    return new SelectlivePoint((await axios.get(url)).data);
   }
 }

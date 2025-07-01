@@ -15,7 +15,8 @@ export class Updater {
     oldTargetAmps: number,
     newTargetAmps: number,
   }> {
-    let spareAmps = await this.selectliveClient.getSpareAmps();
+    let point = await this.selectliveClient.getPoint();
+    let spareAmps = point.getSpareAmps();
 
     let currentTargetAmps = await this.openevseClient.getTargetAmps();
     let measuredAmps = await this.openevseClient.getMeasuredAmps();

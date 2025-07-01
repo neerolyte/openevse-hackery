@@ -49,4 +49,20 @@ describe('SelectlivePoint', () => {
       expect(point.isCurtailed()).to.equal(expected);
     });
   });
+
+  ([
+    // battery_w, expected spare amps, curtailed
+    [{ items: { battery_w: 240, battery_soc: 100 } }, -1],
+    [{ items: { battery_w: 0, battery_soc: 100 } }, 0],
+    [{ items: { battery_w: -240, battery_soc: 100 } }, 1],
+    [{ items: { battery_w: 480, battery_soc: 100 } }, -2],
+    // Curtailed: soc > 90, shunt_w < 50, battery_w < 100, shunt_w and battery_w defined
+    [{ items: { battery_soc: 95, shunt_w: 10, battery_w: 0 } }, 5],
+    [{ items: { battery_soc: 100, shunt_w: 10, battery_w: 0 } }, 10],
+  ] as [SelectlivePointData, number | undefined][]).forEach(([data, expected]) => {
+    it(`getSpareAmps: ${JSON.stringify(data)} => ${expected}`, () => {
+      const point = new SelectlivePoint(data);
+      expect(point.getSpareAmps()).to.equal(expected);
+    });
+  });
 });

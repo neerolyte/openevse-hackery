@@ -4,6 +4,7 @@ import { StubbedInstance } from 'ts-sinon';
 import { OpenevseClient } from '../src/OpenevseClient';
 import { SelectliveClient } from '../src/SelectliveClient';
 import { Updater } from '../src/Updater';
+import { SelectlivePoint } from '../src/SelectlivePoint';
 
 describe('Updater', () => {
   let selectliveClient: StubbedInstance<SelectliveClient>;
@@ -16,8 +17,9 @@ describe('Updater', () => {
   });
 
   it(`updates and returns state`, async () => {
-    selectliveClient.getBatterySoc.returns(Promise.resolve(100));
-    selectliveClient.getSpareAmps.returns(Promise.resolve(100));
+    selectliveClient.getPoint.returns(Promise.resolve(new SelectlivePoint({
+      items: { battery_soc: 100, shunt_w: 10, battery_w: 0 },
+    })));
     openevseClient.getTargetAmps.returns(Promise.resolve(6));
     openevseClient.getMeasuredAmps.returns(Promise.resolve(6));
     openevseClient.setTargetAmps.returns(Promise.resolve(7));
