@@ -27,6 +27,14 @@ export class OpenevseClient {
     return this.openevseRawClient.getMeasuredAmps();
   }
 
+  async setChargingEnabled(enabled: boolean): Promise<void> {
+    if (enabled) {
+      this.openevseRawClient.setToEnabled();
+    } else {
+      this.openevseRawClient.setToSleep();
+    }
+  }
+
   private constrainAmps(amps: number): number {
     return Math.round(Math.max(Math.min(amps, this.openevseAmpsMax), this.openevseAmpsMin));
   }
